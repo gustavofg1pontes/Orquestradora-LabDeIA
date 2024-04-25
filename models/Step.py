@@ -1,0 +1,8 @@
+from enum import Enum
+
+class Step(Enum):
+    APRESENTACAO_INICIAL = 1
+    APRESENTACAO_DE_BENEFICIOS = 2
+    ENVIO_DE_CADASTRO = 3
+    FINALIZACAO = 4
+    DESISTENCIA = 4
