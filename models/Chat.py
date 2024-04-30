@@ -1,16 +1,22 @@
 class Chat:
-    def __init__(self, id, username, step, active):
+    def __init__(self, id, username, step, active, message):
         self.id = id
         self.username = username
         self.step = step
         self.active = active
-        self.messages = []
+        self.message = message
 
-    def add_message(self, message):
-        self.messages.append(message)
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "step": self.step,
+            "active": self.active,
+            "message": self.message
+        }
 
-    def get_messages(self):
-        return self.messages
+    def desativar(self):
+        self.active = False
 
-    def get_last_message(self):
-        return self.messages[-1]
+    def ativar(self):
+        self.active = True

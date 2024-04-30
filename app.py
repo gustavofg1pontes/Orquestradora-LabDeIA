@@ -1,81 +1,82 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request, jsonify
 import os
+import bson
 from dotenv import load_dotenv
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 load_dotenv()
-uri = os.getenv("DB_URL")
 
-# Create a new client and connect to the server
+# Configurando bdd
+uri = os.getenv("DB_URL")
 client = MongoClient(uri, server_api=ServerApi('1'))
+db = client["LabDeIA"]
+collection = db["chats"]
 
 app = Flask(__name__)
 
 
 @app.route('/enviarMensagemLLM', methods=['POST'])
 def enviarMensagemLLM():
-    request.data  # id, username e a message
-    # enviar pra llm -> step e a msg resposta
-    # Editar no mongo o usuario do id
-    # retorna msg resposta
+    chat = collection.find_one({"id": request.json['id']})
+    if not chat:
+        resultado = collection.insert_one(request.json)
+        chat = collection.find_one({"_id": resultado.inserted_id})
+
+    chat["message"] = request.json['message']
+    # TODO enviar p llm
+    newvalues = {"$set": {"message": chat, "step": 2}}  # +} TODO concatenate llm response and change step value
+    filter = {"_id": chat["_id"]}
+    collection.update_one(filter, newvalues)
+    return jsonify({"message": f"LLM Message"}), 200
 
 
-@app.route("/desativar/<id>", methods=['POST'])
+@app.route("/desativar/<id>", methods=['PUT'])
 def desativar(id):
-    print()  # Editar no mongo o usuario do id
-    # retorna msg resposta
+    chat = collection.find_one({"id": id})
+    if chat:
+        collection.update_one({"id": id}, {"$set": {"active": False}})
+        return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
+    else:
+        return jsonify({"error": "Chat não encontrado"}), 404
 
 
-@app.route("/ativar/<id>", methods=['POST'])
+@app.route("/ativar/<id>", methods=['PUT'])
 def ativar(id):
-    print()  # Editar no mongo o usuario do id
+    chat = collection.find_one({"id": id})
+    if chat:
+        collection.update_one({"id": id}, {"$set": {"active": True}})
+        return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
+    else:
+        return jsonify({"error": "Chat não encontrado"}), 404
 
 
 @app.route("/chat/<id>", methods=['GET'])
 def get(id):
-    print()  # retorna o chat do id
+    chat = collection.find_one({"_id": id})
+    if chat:
+        return jsonify(chat), 200
+    else:
+        return jsonify({"error": "Chat não encontrado"}), 404
 
 
 @app.route("/listar", methods=['GET'])
 def listar():
-    print()  # lista todos chats
+    chats = list(collection.find())
+    return jsonify(chats), 200
 
 
 @app.route("/listarAtivos", methods=['GET'])
 def listarAtivos():
-    print()  # lista todos chats ativos
+    chats_ativos = list(collection.find({"active": True}))
+    return jsonify(chats_ativos), 200
 
 
 @app.route("/listarInativos", methods=['GET'])
 def listarInativos():
-    print()  # lista todos chats inativos
+    chats_inativos = list(collection.find({"active": False}))
+    return jsonify(chats_inativos), 200
 
 
 if __name__ == '__main__':
     app.run()
-
-'''
-uri = "mongodb+srv://gpontesf06:8gd8IDUg2HfFYxTs@labdeia.ibq65h9.mongodb.net/?retryWrites=true&w=majority&appName=labdeia"
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
-
-# Selecionando o banco de dados
-db = client["LabDeIA"]
-
-# Selecionando a coleção
-collection = db["chats"]
-documentos = collection.find({"chave3" : "valor3"})
-for documento in documentos:
-    print(documento)
-
-# Dados a serem inseridos
-dados = {"chave1": "valor1", "chave2": "valor2"}
-
-# Inserindo os dados na coleção
-resultado = collection.insert_one(dados)
-
-# Imprimindo o ID do documento inserido
-print("ID do documento inserido:", resultado.inserted_id)
-'''
