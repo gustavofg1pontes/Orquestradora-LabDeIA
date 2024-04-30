@@ -1,23 +1,13 @@
-from flask import Flask, request, jsonify
-import os
-import bson
-from dotenv import load_dotenv
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
+from flask import request, jsonify
+from config.app import app_config
+from config.db import db_config
 
-load_dotenv()
-
-# Configurando bdd
-uri = os.getenv("DB_URL")
-client = MongoClient(uri, server_api=ServerApi('1'))
-db = client["LabDeIA"]
-collection = db["chats"]
-
-app = Flask(__name__)
+app = app_config()
+collection = db_config()
 
 
 @app.route('/enviarMensagemLLM', methods=['POST'])
-def enviarMensagemLLM():
+def enviar_mensagem_llm():
     chat = collection.find_one({"id": request.json['id']})
     if not chat:
         resultado = collection.insert_one(request.json)
@@ -25,7 +15,7 @@ def enviarMensagemLLM():
 
     chat["message"] = request.json['message']
     # TODO enviar p llm
-    newvalues = {"$set": {"message": chat, "step": 2}}  # +} TODO concatenate llm response and change step value
+    newvalues = {"$set": {"message": chat["message"], "step": 2}}  # +} TODO concatenate llm response and change step value
     filter = {"_id": chat["_id"]}
     collection.update_one(filter, newvalues)
     return jsonify({"message": f"LLM Message"}), 200
@@ -67,16 +57,12 @@ def listar():
 
 
 @app.route("/listarAtivos", methods=['GET'])
-def listarAtivos():
+def listar_ativos():
     chats_ativos = list(collection.find({"active": True}))
     return jsonify(chats_ativos), 200
 
 
 @app.route("/listarInativos", methods=['GET'])
-def listarInativos():
+def listar_inativos():
     chats_inativos = list(collection.find({"active": False}))
     return jsonify(chats_inativos), 200
-
-
-if __name__ == '__main__':
-    app.run()
