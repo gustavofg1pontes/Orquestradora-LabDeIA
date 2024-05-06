@@ -1,12 +1,12 @@
 from flask import request, jsonify
-from config.app import app_config
+from flask import Blueprint
 from config.db import db_config
 
-app = app_config()
+chats_app = Blueprint('chats_app', __name__)
 collection = db_config()
 
 
-@app.route('/enviarMensagemLLM', methods=['POST'])
+@chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
 def enviar_mensagem_llm():
     chat = collection.find_one({"id": request.json['id']})
     if not chat:
@@ -21,7 +21,7 @@ def enviar_mensagem_llm():
     return jsonify({"message": f"LLM Message"}), 200
 
 
-@app.route("/desativar/<id>", methods=['PUT'])
+@chats_app.route("/chats/desativar/<id>", methods=['PUT'])
 def desativar(id):
     chat = collection.find_one({"id": id})
     if chat:
@@ -31,7 +31,7 @@ def desativar(id):
         return jsonify({"error": "Chat não encontrado"}), 404
 
 
-@app.route("/ativar/<id>", methods=['PUT'])
+@chats_app.route("/chats/ativar/<id>", methods=['PUT'])
 def ativar(id):
     chat = collection.find_one({"id": id})
     if chat:
@@ -41,7 +41,7 @@ def ativar(id):
         return jsonify({"error": "Chat não encontrado"}), 404
 
 
-@app.route("/chat/<id>", methods=['GET'])
+@chats_app.route("/chats/getChat/<id>", methods=['GET'])
 def get(id):
     chat = collection.find_one({"_id": id})
     if chat:
@@ -50,44 +50,19 @@ def get(id):
         return jsonify({"error": "Chat não encontrado"}), 404
 
 
-@app.route("/listar", methods=['GET'])
+@chats_app.route("/chats/listar", methods=['GET'])
 def listar():
     chats = list(collection.find())
     return jsonify(chats), 200
 
 
-@app.route("/listarAtivos", methods=['GET'])
+@chats_app.route("/chats/listarAtivos", methods=['GET'])
 def listar_ativos():
     chats_ativos = list(collection.find({"active": True}))
     return jsonify(chats_ativos), 200
 
 
-@app.route("/listarInativos", methods=['GET'])
+@chats_app.route("/chats/listarInativos", methods=['GET'])
 def listar_inativos():
     chats_inativos = list(collection.find({"active": False}))
     return jsonify(chats_inativos), 200
-
-
-@app.route("/addDocument", methods=['POST'])
-def add_document():
-    collection.insert_one(request.json)
-    return jsonify({"message": f"Documento inserido com sucesso"}), 200
-
-
-@app.route("/getDocuments", methods=['GET'])
-def get_documents():
-    documents = list(collection.find())
-    return jsonify(documents), 200
-
-
-@app.route("/updateDocument/<id>", methods=['PUT'])
-def update_document(id):
-    collection.update_one({"_id": id}, {"$set": request.json})
-    return jsonify({"message": f"Documento atualizado com sucesso"}), 200
-
-
-@app.route("/deleteDocument/<id>", methods=['DELETE'])
-def delete_document(id):
-    collection.delete_one({"_id": id})
-    return jsonify({"message": f"Documento deletado com sucesso"}), 200
-
