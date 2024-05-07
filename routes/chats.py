@@ -3,7 +3,7 @@ from flask import Blueprint
 from config.db import db_config
 
 chats_app = Blueprint('chats_app', __name__)
-collection = db_config()
+collection = db_config("chats")
 
 
 @chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
@@ -41,7 +41,7 @@ def ativar(id):
         return jsonify({"error": "Chat não encontrado"}), 404
 
 
-@chats_app.route("/chats/getChat/<id>", methods=['GET'])
+@chats_app.route("/chats/get/<id>", methods=['GET'])
 def get(id):
     chat = collection.find_one({"_id": id})
     if chat:
@@ -50,7 +50,7 @@ def get(id):
         return jsonify({"error": "Chat não encontrado"}), 404
 
 
-@chats_app.route("/chats/listar", methods=['GET'])
+@chats_app.route("/chats/list", methods=['GET'])
 def listar():
     chats = list(collection.find())
     return jsonify(chats), 200
