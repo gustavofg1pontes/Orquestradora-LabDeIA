@@ -7,7 +7,7 @@ from pymongo.server_api import ServerApi
 load_dotenv()
 
 
-def db_config(collection_name):
+def collection_config(collection_name):
     # Configurando bdd
     uri = os.getenv("DB_URL")
     client = MongoClient(uri, server_api=ServerApi('1'))

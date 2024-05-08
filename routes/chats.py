@@ -1,24 +1,22 @@
 from flask import request, jsonify
 from flask import Blueprint
-from config.db import db_config
+from config.db import collection_config
+from models import Chat
 
 chats_app = Blueprint('chats_app', __name__)
-collection = db_config("chats")
+collection = collection_config("chats")
 
 
 @chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
 def enviar_mensagem_llm():
-    chat = collection.find_one({"id": request.json['id']})
-    if not chat:
-        resultado = collection.insert_one(request.json)
-        chat = collection.find_one({"_id": resultado.inserted_id})
+    chat = Chat.to_chat(request.json)
 
-    chat["message"] = request.json['message']
+    historic = {"$set": {"user": chat["message"], "assistant": chat["response"]}}  # TODO logica para pegar o historico
     # TODO enviar p llm
-    newvalues = {"$set": {"message": chat["message"], "step": 2}}  # +} TODO concatenate llm response and change step value
-    filter = {"_id": chat["_id"]}
-    collection.update_one(filter, newvalues)
-    return jsonify({"message": f"LLM Message"}), 200
+    chat["response"] = request.json['response']  # Resposta da LLM
+
+    collection.insert_one(chat.to_dict())
+    return jsonify({"message": f"LLM Message"}), 200  # TODO retornar a resposta da LLM
 
 
 @chats_app.route("/chats/desativar/<id>", methods=['PUT'])
