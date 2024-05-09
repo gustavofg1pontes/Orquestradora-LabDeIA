@@ -1,10 +1,11 @@
 class Chat:
-    def __init__(self, id, message_service, username, active, message, createdAt):
+    def __init__(self, id, message_service, username, assistant_id , active, message, createdAt):
         self.channel = {
             "id": id,
             "message_service": message_service
         }
         self.username = username
+        self.assistant_id = assistant_id
         self.isActive = active
         self.message = message
         self.response = ""
@@ -12,9 +13,12 @@ class Chat:
 
     def to_dict(self):
         return {
-            "id": self.channel["id"],
-            "message_service": self.channel["message_service"],
+            "channel": {
+                "id": self.channel["id"],
+                "message_service": self.channel["message_service"]
+            },
             "username": self.username,
+            "assistant_id": self.assistant_id,
             "active": self.isActive,
             "message": self.message,
             "response": self.response,
@@ -29,5 +33,5 @@ class Chat:
 
 
 def to_chat(dict):
-    return Chat(dict["id"], dict["message_service"], dict["username"], dict["active"],
+    return Chat(dict["id"], dict["message_service"], dict["username"], dict["assistant_id"], dict["active"],
                 dict["message"], dict["createdAt"])

@@ -1,7 +1,6 @@
 from flask import request, jsonify
 from flask import Blueprint
 from config.db import collection_config
-from models import Chat
 from models.Chat import to_chat
 
 chats_app = Blueprint('chats_app', __name__)
@@ -12,7 +11,7 @@ collection = collection_config("chats")
 def enviar_mensagem_llm():
     chat = to_chat(request.json)
 
-    history = collection.find().sort({"createdAt": -1}).limit(5)
+    history = collection.find({"id": chat.channel["id"]}).sort({"createdAt": -1}).limit(5)
 
     # TODO request llm response using history and chat.message
     chat.response = "resposta"
@@ -23,9 +22,9 @@ def enviar_mensagem_llm():
 
 @chats_app.route("/chats/desativar/<id>", methods=['PUT'])
 def desativar(id):
-    chat = collection.find_one({"id": id})
+    chat = collection.find_one({"channel.id": id})
     if chat:
-        collection.update_one({"id": id}, {"$set": {"active": False}})
+        collection.update_one({"channel.id": id}, {"$set": {"active": False}})
         return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
     else:
         return jsonify({"error": "Chat não encontrado"}), 404
@@ -33,9 +32,9 @@ def desativar(id):
 
 @chats_app.route("/chats/ativar/<id>", methods=['PUT'])
 def ativar(id):
-    chat = collection.find_one({"id": id})
+    chat = collection.find_one({"channel.id": id})
     if chat:
-        collection.update_one({"id": id}, {"$set": {"active": True}})
+        collection.update_one({"channel.id": id}, {"$set": {"active": True}})
         return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
     else:
         return jsonify({"error": "Chat não encontrado"}), 404
@@ -44,6 +43,7 @@ def ativar(id):
 @chats_app.route("/chats/get/<id>", methods=['GET'])
 def get(id):
     chat = collection.find_one({"_id": id})
+    chat["_id"] = str(chat["_id"])
     if chat:
         return jsonify(chat), 200
     else:
@@ -53,6 +53,8 @@ def get(id):
 @chats_app.route("/chats/list", methods=['GET'])
 def listar():
     chats = list(collection.find())
+    for chat in chats:
+        chat['_id'] = str(chat['_id'])
     return jsonify(chats), 200
 
 
