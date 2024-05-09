@@ -1,13 +1,14 @@
 class Chat:
-    def __init__(self, id, message_service, username, step, active, message, response, createdAt):
+    def __init__(self, id, message_service, username, step, active, message, createdAt):
         self.channel = {
-            id, message_service
+            "id": id,
+            "message_service": message_service
         }
         self.username = username
         self.step = step
         self.isActive = active
         self.message = message
-        self.response = response
+        self.response = ""
         self.createdAt = createdAt
 
     def to_dict(self):
@@ -28,7 +29,7 @@ class Chat:
     def ativar(self):
         self.isActive = True
 
-    @staticmethod
-    def to_chat(dict):
-        return Chat(dict["id"], dict["message_service"], dict["username"], dict["step"], dict["active"],
-                    dict["message"], dict["response"], dict["createdAt"])
+
+def to_chat(dict):
+    return Chat(dict["id"], dict["message_service"], dict["username"], dict["step"], dict["active"],
+                dict["message"], dict["createdAt"])

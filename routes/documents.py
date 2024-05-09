@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 
 documents_app = Blueprint('documents_app', __name__)
 collection = collection_config("documents")
-documents_app.config['UPLOAD_FOLDER'] = './documents'
 
 
 @documents_app.route("/documents/add", methods=['POST'])
@@ -18,7 +17,7 @@ def add_document():
         return jsonify({"message": f"Não há nenhum documento"}), 400
     if file:
         filename = secure_filename(file.filename)
-        file.save(os.path.join(documents_app.config['UPLOAD_FOLDER'], filename))
+        file.save(os.path.join('.\\documents', filename))
 
         collection.insert_one({"filepath": f"./documents/{filename}", "type": request.form["type"]})
 

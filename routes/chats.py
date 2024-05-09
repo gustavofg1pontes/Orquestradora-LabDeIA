@@ -2,6 +2,7 @@ from flask import request, jsonify
 from flask import Blueprint
 from config.db import collection_config
 from models import Chat
+from models.Chat import to_chat
 
 chats_app = Blueprint('chats_app', __name__)
 collection = collection_config("chats")
@@ -9,14 +10,15 @@ collection = collection_config("chats")
 
 @chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
 def enviar_mensagem_llm():
-    chat = Chat.to_chat(request.json)
+    chat = to_chat(request.json)
 
-    historic = {"$set": {"user": chat["message"], "assistant": chat["response"]}}  # TODO logica para pegar o historico
-    # TODO enviar p llm
-    chat["response"] = request.json['response']  # Resposta da LLM
+    history = collection.find().sort({"createdAt": -1}).limit(5)
+
+    # TODO request llm response using history and chat.message
+    chat.response = "resposta"
 
     collection.insert_one(chat.to_dict())
-    return jsonify({"message": f"LLM Message"}), 200  # TODO retornar a resposta da LLM
+    return jsonify({"message": chat.response}), 200  # TODO retornar a resposta da LLM"""
 
 
 @chats_app.route("/chats/desativar/<id>", methods=['PUT'])
