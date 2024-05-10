@@ -55,21 +55,8 @@ def get_document(id):
         return jsonify({"error": "Documento não encontrado"}), 404
 
 
-'''
-@documents_app.route("/documents/list", methods=['GET'])
-def list_documents():
-    documents = list(collection.find())
-    return jsonify(documents), 200
-
-
-@documents_app.route("/documents/update/<id>", methods=['PUT'])
-def update_document(id):
-    collection.update_one({"_id": id}, {"$set": request.json})
-    return jsonify({"message": f"Documento atualizado com sucesso"}), 200
-
-
 @documents_app.route("/documents/delete/<id>", methods=['DELETE'])
 def delete_document(id):
-    collection.delete_one({"_id": id})
+    objId = ObjectId(id)
+    collection.delete_one({"_id": objId})
     return jsonify({"message": f"Documento deletado com sucesso"}), 200
-'''
