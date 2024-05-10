@@ -19,8 +19,8 @@ class Document:
         }
 
 
-def to_document(dict):
-    return Document(dict["filepath"], dict["filename"], dict["type"], dict["assistant_id"], dict["createdAt"])
+def from_dict(dict):
+    return Document(dict["filepath"], dict["filename"], DocumentType(dict["type"].upper()), dict["assistant_id"], dict["createdAt"])
 
 
 def to_document(filepath, filename, dict):

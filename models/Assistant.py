@@ -11,5 +11,6 @@ class Assistant:
             "createdAt": self.createdAt
         }
 
+
 def to_assistant(dict):
     return Assistant(dict["name"], dict["company"], dict["createdAt"])

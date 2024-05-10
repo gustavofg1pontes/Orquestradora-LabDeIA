@@ -6,7 +6,7 @@ from flask import Blueprint
 from config.db import collection_config
 from werkzeug.utils import secure_filename
 
-from models.Document import to_document
+from models.Document import to_document, from_dict
 from utils.documents import allowed_file
 
 DOCUMENTS_FOLDER = '.\\documents'
@@ -40,14 +40,15 @@ def list_documents():
     return jsonify(documents), 200
 
 
-@documents_app.route("/documents/get/<string:id>", methods=['GET'])
+@documents_app.route("/documents/get/<id>", methods=['GET'])
 def get_document(id):
     objId = ObjectId(id)
-    document = collection.find_one({"_id": objId})
+    document = from_dict(collection.find_one({"_id": objId}))
+    print(document.to_dict())
     if document:
-        file_path = document.get("filepath")
-        file_name = document.get("filename")
-        if file_path and os.path.exists(file_path + f"\\{file_name}"):
+        file_path = document.filepath
+        file_name = document.filename
+        if file_path and os.path.exists(os.path.join(file_path, file_name)):
             return send_from_directory(file_path, file_name, as_attachment=True)
         else:
             return jsonify({"error": "File not found or invalid file path"}), 404
@@ -58,5 +59,7 @@ def get_document(id):
 @documents_app.route("/documents/delete/<id>", methods=['DELETE'])
 def delete_document(id):
     objId = ObjectId(id)
+    document = from_dict(collection.find_one({"_id": objId}))
+    os.remove(os.path.join(DOCUMENTS_FOLDER, document.filename))
     collection.delete_one({"_id": objId})
     return jsonify({"message": f"Documento deletado com sucesso"}), 200
