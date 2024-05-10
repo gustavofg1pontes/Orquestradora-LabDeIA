@@ -6,7 +6,7 @@ from flask import Blueprint
 from config.db import collection_config
 from werkzeug.utils import secure_filename
 
-from models.Document import to_document, from_dict
+from models.Document import to_document, document_from_dict
 from utils.documents import allowed_file
 
 DOCUMENTS_FOLDER = '.\\documents'
@@ -43,8 +43,7 @@ def list_documents():
 @documents_app.route("/documents/get/<id>", methods=['GET'])
 def get_document(id):
     objId = ObjectId(id)
-    document = from_dict(collection.find_one({"_id": objId}))
-    print(document.to_dict())
+    document = document_from_dict(collection.find_one({"_id": objId}))
     if document:
         file_path = document.filepath
         file_name = document.filename
@@ -59,7 +58,7 @@ def get_document(id):
 @documents_app.route("/documents/delete/<id>", methods=['DELETE'])
 def delete_document(id):
     objId = ObjectId(id)
-    document = from_dict(collection.find_one({"_id": objId}))
+    document = document_from_dict(collection.find_one({"_id": objId}))
     os.remove(os.path.join(DOCUMENTS_FOLDER, document.filename))
     collection.delete_one({"_id": objId})
     return jsonify({"message": f"Documento deletado com sucesso"}), 200

@@ -19,7 +19,7 @@ class Document:
         }
 
 
-def from_dict(dict):
+def document_from_dict(dict):
     return Document(dict["filepath"], dict["filename"], DocumentType(dict["type"].upper()), dict["assistant_id"], dict["createdAt"])
 
 
