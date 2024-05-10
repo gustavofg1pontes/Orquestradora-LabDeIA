@@ -1,6 +1,5 @@
 from models.DocumentType import DocumentType
 
-
 class Document:
     def __init__(self, filepath, filename, type, assistant_id, createdAt):
         self.filepath = filepath

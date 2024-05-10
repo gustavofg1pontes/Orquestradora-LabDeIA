@@ -1,6 +1,8 @@
+from bson import ObjectId
+
 class User:
   def __init__(self, id, email, password, name):
-    self.id = id;
+    self.id = id == None and ObjectId() or id;
     self.email = email
     self.password = password
     self.name = name
