@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import request, jsonify
 from flask import Blueprint
 from config.db import collection_config
@@ -42,7 +43,8 @@ def ativar(id):
 
 @chats_app.route("/chats/get/<id>", methods=['GET'])
 def get(id):
-    chat = collection.find_one({"_id": id})
+    objId = ObjectId(id)
+    chat = collection.find_one({"_id": objId})
     chat["_id"] = str(chat["_id"])
     if chat:
         return jsonify(chat), 200
@@ -61,10 +63,14 @@ def listar():
 @chats_app.route("/chats/listarAtivos", methods=['GET'])
 def listar_ativos():
     chats_ativos = list(collection.find({"active": True}))
+    for chat in chats_ativos:
+        chat['_id'] = str(chat['_id'])
     return jsonify(chats_ativos), 200
 
 
 @chats_app.route("/chats/listarInativos", methods=['GET'])
 def listar_inativos():
     chats_inativos = list(collection.find({"active": False}))
+    for chat in chats_inativos:
+        chat['_id'] = str(chat['_id'])
     return jsonify(chats_inativos), 200
