@@ -1,3 +1,6 @@
+from models.DocumentType import DocumentType
+
+
 class Document:
     def __init__(self, filepath, filename, type, assistant_id, createdAt):
         self.filepath = filepath
@@ -10,7 +13,7 @@ class Document:
         return {
             "filepath": self.filepath,
             "filename": self.filename,
-            "type": self.type,
+            "type": self.type.name,
             "assistant_id": self.assistant_id,
             "createdAt": self.createdAt
         }
@@ -21,4 +24,4 @@ def to_document(dict):
 
 
 def to_document(filepath, filename, dict):
-    return Document(filepath, filename, dict["type"], dict["assistant_id"], dict["createdAt"])
+    return Document(filepath, filename, DocumentType(dict["type"].upper()), dict["assistant_id"], dict["createdAt"])
