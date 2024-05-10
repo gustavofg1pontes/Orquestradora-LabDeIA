@@ -63,8 +63,6 @@ The project is organized into three main sections: routes, models, and database 
       "message": "mensagem do usuario",
       "createdAt": "05-09-2024T19:57:00"
     }
-- **PUT /chats/desativar/&lt;id&gt;**: Deactivate a specific chat.
-- **PUT /chats/ativar/&lt;id&gt;**: Activate a specific chat.
 - **GET /chats/get/&lt;id&gt;**: Get details of a specific chat.
   ```json
   response:
@@ -135,6 +133,8 @@ The project is organized into three main sections: routes, models, and database 
         "createdAt": "05-09-2024T19:57:00"
         }
     ]
+- **PUT /chats/desativar/&lt;id&gt;**: Deactivate a specific chat.
+- **PUT /chats/ativar/&lt;id&gt;**: Activate a specific chat.
 
 #### Documents
 
@@ -162,6 +162,33 @@ The project is organized into three main sections: routes, models, and database 
     ]
 - **GET /documents/get/&lt;id&gt;**: Download a specific document.
 - **DELETE /documents/delete/&lt;id&gt;**: Delete a specific document.
+
+#### Auth
+
+- **POST /auth/login**: Login to the application.
+    ```json
+    request:
+    {
+        "email": "user email",
+        "password": "password"
+    }
+    response:
+    {
+        "token": "access token",
+        "user": {
+            "email": "user email",
+            "id": "id",
+            "name": "name"
+        }
+    }
+- **POST /auth/register**: Register a new user.
+    ```json
+    request:
+    {
+        "name": "name"
+        "email": "user email",
+        "password": "password",
+    }
 
 ### Models
 
