@@ -7,11 +7,11 @@ class User:
   
   def to_dict(self):
     return {
-      "id": self.id,
+      "_id": self.id,
       "email": self.email,
       "password": self.password,
       "name": self.name
     }
 
 def user_from_dict(dict):
-  return User(dict["id"], dict["email"], dict["password"], dict["name"])
+  return User(dict["_id"], dict["email"], dict["password"], dict["name"])
