@@ -28,7 +28,8 @@ class AuthService:
       if bcrypt.checkpw(senha.encode('utf-8'), user["password"].encode('utf-8')):
         fuso_horario_brasileiro = datetime.timedelta(hours=-3)
         iat = datetime.datetime.now(tz=datetime.timezone.utc) + fuso_horario_brasileiro
-        jwt_token = jwt.encode({"id": str(user["_id"]), "iat": iat, "exp": iat + datetime.timedelta(days=3)}, secret, algorithm="HS256")
+        payload = {"id": str(user["_id"]), "admin": True, "iat": iat, "exp": iat + datetime.timedelta(days=3)}
+        jwt_token = jwt.encode(payload, secret, algorithm="HS256")
         return jsonify({
           "token": jwt_token,
           "user": {

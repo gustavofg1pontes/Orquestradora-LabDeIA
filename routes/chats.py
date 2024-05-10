@@ -3,12 +3,14 @@ from flask import request, jsonify
 from flask import Blueprint
 from config.db import collection_config
 from models.Chat import to_chat
+from utils.tokendec import token_required
 
 chats_app = Blueprint('chats_app', __name__)
 collection = collection_config("chats")
 
 
 @chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
+@token_required
 def enviar_mensagem_llm():
     chat = to_chat(request.json)
 
@@ -22,6 +24,7 @@ def enviar_mensagem_llm():
 
 
 @chats_app.route("/chats/desativar/<id>", methods=['PUT'])
+@token_required
 def desativar(id):
     chat = collection.find_one({"channel.id": id})
     if chat:
@@ -32,6 +35,7 @@ def desativar(id):
 
 
 @chats_app.route("/chats/ativar/<id>", methods=['PUT'])
+@token_required
 def ativar(id):
     chat = collection.find_one({"channel.id": id})
     if chat:
@@ -42,6 +46,7 @@ def ativar(id):
 
 
 @chats_app.route("/chats/get/<id>", methods=['GET'])
+@token_required
 def get(id):
     objId = ObjectId(id)
     chat = collection.find_one({"_id": objId})
@@ -53,6 +58,7 @@ def get(id):
 
 
 @chats_app.route("/chats/list", methods=['GET'])
+@token_required
 def listar():
     chats = list(collection.find())
     for chat in chats:
@@ -61,6 +67,7 @@ def listar():
 
 
 @chats_app.route("/chats/listarAtivos", methods=['GET'])
+@token_required
 def listar_ativos():
     chats_ativos = list(collection.find({"active": True}))
     for chat in chats_ativos:
@@ -69,6 +76,7 @@ def listar_ativos():
 
 
 @chats_app.route("/chats/listarInativos", methods=['GET'])
+@token_required
 def listar_inativos():
     chats_inativos = list(collection.find({"active": False}))
     for chat in chats_inativos:
