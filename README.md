@@ -188,9 +188,10 @@ The project utilizes MongoDB as the database. Each model corresponds to a collec
 To set up the project locally, follow these steps:
 
 1. Clone the repository.
-2. Install the required dependencies using pip: `pip install -r requirements.txt`.
-3. Configure the MongoDB connection details in the Flask application.
-4. Run the Flask application: `python main.py`.
+2. Run `cp .env.example .env` to create a new `.env` file and set it up using your mongodb connection url.
+3. Install the required dependencies using pip: `pip install -r requirements.txt`.
+4. Configure the MongoDB connection details in the Flask application.
+5. Run the Flask application: `python main.py`.
 
 ## Contributing
 
