@@ -27,8 +27,15 @@ def add_document():
         file.save(os.path.join(DOCUMENTS_FOLDER, filename))
 
         document = to_document(DOCUMENTS_FOLDER, filename, request.form)
-        collection.insert_one(document.to_dict())
-        return jsonify({"message": f"Documento inserido com sucesso"}), 200
+        inserted_id = collection.insert_one(document.to_dict()).inserted_id
+        
+        response_data = {"id": str(inserted_id)}
+        response = jsonify(response_data)
+        response.status_code = 201
+        response.headers["Location"] = f"/documents/get/{inserted_id}"
+        response.content_type = "application/json"
+    
+        return response
     return jsonify({"message": f"Documento não inserido"}), 400
 
 

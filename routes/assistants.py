@@ -12,8 +12,15 @@ collection = collection_config("assistants")
 def add_assistant():
     assistant = to_assistant(request.json)
 
-    collection.insert_one(assistant.to_dict())
-    return jsonify({"message": f"Assistant inserido com sucesso"}), 200
+    inserted_id = collection.insert_one(assistant.to_dict()).inserted_id
+    
+    response_data = {"id": str(inserted_id)}
+    response = jsonify(response_data)
+    response.status_code = 201
+    response.headers["Location"] = f"/assistants/get/{inserted_id}"
+    response.content_type = "application/json"
+    
+    return response
 
 
 @assistants_app.route("/assistants/list", methods=['GET'])
