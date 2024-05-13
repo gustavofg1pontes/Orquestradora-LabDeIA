@@ -226,8 +226,7 @@ To set up the project locally, follow these steps:
 1. Clone the repository.
 2. Run `cp .env.example .env` to create a new `.env` file and set it up using your mongodb connection url.
 3. Install the required dependencies using pip: `pip install -r requirements.txt`.
-4. Configure the MongoDB connection details in the Flask application.
-5. Run the Flask application: `python main.py`.
+4. Run the Flask application on waitress running: `waitress-serve --port=8080 --call main:create_app`.
 
 ## Contributing
 

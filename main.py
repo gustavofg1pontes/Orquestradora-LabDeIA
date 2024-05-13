@@ -12,5 +12,6 @@ app.register_blueprint(documents_app)
 app.register_blueprint(chats_app)
 app.register_blueprint(auth_api)
 
-if __name__ == '__main__':
-    app.run()
+
+def create_app():
+    return app
