@@ -59,8 +59,7 @@ The project is organized into three main sections: routes, models, and database 
       "username": "nome",
       "assistant_id": "id",
       "active": true,
-      "message": "mensagem do usuario",
-      "createdAt": "05-09-2024T19:57:00"
+      "message": "mensagem do usuario"
     }
 - **GET /chats/get/&lt;id&gt;**: Get details of a specific chat.
   ```json
@@ -144,7 +143,6 @@ The project is organized into three main sections: routes, models, and database 
         "file": "file attached"
         "type": "rag or prompt",
         "assistant_id": "id",
-        "createdAt": "2021-09-01T00:00:00"
     }
 - **GET /documents/list**: List all documents.
   ```json
