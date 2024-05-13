@@ -4,23 +4,30 @@ from flask import Blueprint
 from config.db import collection_config
 from models.Chat import to_chat
 from utils.tokendec import token_required
+from utils.coreRoutes import initSession, sendCoreChat, closeSession
 
 chats_app = Blueprint('chats_app', __name__)
 collection = collection_config("chats")
 
 
-@chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
+@chats_app.route('/chats/enviarMensagemLLM/<assistantName>', methods=['POST'])
 @token_required
-def enviar_mensagem_llm():
+def enviar_mensagem_llm(assistantName):
     chat = to_chat(request.json)
+    initSession(assistantName) # TODO see utils/coreRoutes.py
 
-    history = collection.find({"id": chat.channel["id"]}).sort({"createdAt": -1}).limit(5)
+    history = list(collection.find({"channel.id": chat.channel['id']}, {"message": 1, "response": 1, "_id": 0}).sort("createdAt", -1).limit(20))[::-1]
+    payload = jsonify({"history": history, "query": chat.message})
+    response = sendCoreChat(assistantName, payload)
 
-    # TODO request llm response using history and chat.message
-    chat.response = "resposta"
+    if response.status_code == 200:
+        chat.response = response.json()
+    else:
+        return jsonify({"error": "Assistente informado não existe"}), 404
 
     collection.insert_one(chat.to_dict())
-    return jsonify({"message": chat.response}), 200  # TODO retornar a resposta da LLM"""
+    closeSession(assistantName)
+    return jsonify({"response": chat.response}), 200
 
 
 @chats_app.route("/chats/desativar/<id>", methods=['PUT'])

@@ -17,7 +17,7 @@ class AuthService:
       return jsonify({"error": "Endereço de e-mail já cadastrado"}), 400
     
     senha = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    user = User(None,email, senha, name)
+    user = User(None, email, senha, name)
 
     self.collection.insert_one(user.to_dict())
     return jsonify({"message": "Usuário cadastrado com sucesso"}), 201
