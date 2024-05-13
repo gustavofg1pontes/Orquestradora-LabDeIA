@@ -50,7 +50,7 @@ def ativar(id):
 def get(id):
     objId = ObjectId(id)
     chat = collection.find_one({"_id": objId})
-    chat["_id"] = str(chat["_id"])
+    chat['_id'] = str(chat['_id'])
     if chat:
         return jsonify(chat), 200
     else:

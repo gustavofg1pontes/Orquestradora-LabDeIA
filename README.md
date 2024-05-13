@@ -16,15 +16,14 @@ The project is organized into three main sections: routes, models, and database 
   request:
   {
     "name": "Assistant Name",
-    "company": "Company Name"
-    "createdAt": "2021-09-01T00:00:00"
+    "owner_id": "Owner id"
   }
 - **GET /assistants/list**: List all assistants.
   ```json
   response:
   [
     {
-      "id": "id",
+      "_id": "id",
       "name": "Assistant Name",
       "company": "Company Name",
       "createdAt": "2021-09-01T00:00:00"
@@ -34,7 +33,7 @@ The project is organized into three main sections: routes, models, and database 
   ```json
   response:
   {
-    "id": "id",
+    "_id": "id",
     "name": "Assistant Name",
     "company": "Company Name",
     "createdAt": "2021-09-01T00:00:00"
@@ -109,7 +108,7 @@ The project is organized into three main sections: routes, models, and database 
         },
         "username": "nome",
         "assistant_id": "id",
-        "active": true,
+        "active": True,
         "message": "mensagem do Usuario",
         "response": "resposta LLM",
         "createdAt": "05-09-2024T19:57:00"
@@ -127,7 +126,7 @@ The project is organized into three main sections: routes, models, and database 
         },
         "username": "nome",
         "assistant_id": "id",
-        "active": true,
+        "active": False,
         "message": "mensagem do Usuario",
         "response": "resposta LLM",
         "createdAt": "05-09-2024T19:57:00"
@@ -152,7 +151,7 @@ The project is organized into three main sections: routes, models, and database 
     response:
     [
         {
-        "id": "id",
+        "_id": "id",
         "filepath": "file path",
         "filename": "file name",
         "type": "rag or prompt",
@@ -160,7 +159,19 @@ The project is organized into three main sections: routes, models, and database 
         "createdAt": "2021-09-01T00:00:00"
         }
     ]
-- **GET /documents/get/&lt;id&gt;**: Download a specific document.
+- **GET /documents/get/&lt;id&gt;**: Get details of a specific document.
+  ```json
+    response:
+    {
+          "_id": "id",
+        "filepath": "file path",
+        "filename": "file name",
+        "type": "rag or prompt",
+        "assistant_id": "id",
+        "createdAt": "2021-09-01T00:00:00"
+    }
+- **PUT /documents/path/get/&lt;id&gt;**: Get the file path of a specific document. 
+- **GET /documents/download/&lt;id&gt;**: Download a specific document.
 - **DELETE /documents/delete/&lt;id&gt;**: Delete a specific document.
 
 #### Auth

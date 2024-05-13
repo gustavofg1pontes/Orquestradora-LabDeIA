@@ -1,16 +1,18 @@
+from datetime import datetime
+
 class Assistant:
-    def __init__(self, name, company, createdAt):
+    def __init__(self, name, owner_id, createdAt):
         self.name = name
-        self.company = company
+        self.owner_id = owner_id
         self.createdAt = createdAt
 
     def to_dict(self):
         return {
             "name": self.name,
-            "company": self.company,
+            "owner_id": self.owner_id,
             "createdAt": self.createdAt
         }
 
 
 def to_assistant(dict):
-    return Assistant(dict["name"], dict["company"], dict["createdAt"])
+    return Assistant(dict["name"], dict["owner_id"], datetime.now())

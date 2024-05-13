@@ -1,5 +1,8 @@
+from datetime import datetime
+
+
 class Chat:
-    def __init__(self, id, message_service, username, assistant_id , active, message, createdAt):
+    def __init__(self, id, message_service, username, assistant_id, active, message, createdAt):
         self.channel = {
             "id": id,
             "message_service": message_service
@@ -34,4 +37,4 @@ class Chat:
 
 def to_chat(dict):
     return Chat(dict["id"], dict["message_service"], dict["username"], dict["assistant_id"], dict["active"],
-                dict["message"], dict["createdAt"])
+                dict["message"], datetime.now())

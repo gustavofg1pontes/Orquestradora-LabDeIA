@@ -3,13 +3,15 @@ import os
 from bson import ObjectId
 from flask import request, jsonify, send_from_directory
 from flask import Blueprint
+
+import main
 from config.db import collection_config
 from werkzeug.utils import secure_filename
 
 from models.Document import to_document, document_from_dict
 from utils.documents import allowed_file
 
-DOCUMENTS_FOLDER = '.\\documents'
+DOCUMENTS_FOLDER = 'documents'
 
 documents_app = Blueprint('documents_app', __name__)
 collection = collection_config("documents")
@@ -47,7 +49,7 @@ def list_documents():
     return jsonify(documents), 200
 
 
-@documents_app.route("/documents/get/<id>", methods=['GET'])
+@documents_app.route("/documents/download/<id>", methods=['GET'])
 def get_document(id):
     objId = ObjectId(id)
     document = document_from_dict(collection.find_one({"_id": objId}))
@@ -58,6 +60,28 @@ def get_document(id):
             return send_from_directory(file_path, file_name, as_attachment=True)
         else:
             return jsonify({"error": "File not found or invalid file path"}), 404
+    else:
+        return jsonify({"error": "Documento não encontrado"}), 404
+
+
+@documents_app.route("/documents/path/get/<id>", methods=['GET'])
+def get_document_path(id):
+    objId = ObjectId(id)
+    document = document_from_dict(collection.find_one({"_id": objId}))
+    filepath = os.path.join(main.app.root_path, document.filepath, document.filename).replace("\\", "/")
+    if document:
+        return jsonify({"path": filepath}), 200
+    else:
+        return jsonify({"error": "Documento não encontrado"}), 404
+
+
+@documents_app.route("/documents/get/<id>", methods=['GET'])
+def get_document_info(id):
+    objId = ObjectId(id)
+    document = collection.find_one({"_id": objId})
+    document["_id"] = str(document["_id"])
+    if document:
+        return jsonify(document), 200
     else:
         return jsonify({"error": "Documento não encontrado"}), 404
 
