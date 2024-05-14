@@ -9,8 +9,8 @@ class ChatRepository:
         inserted = self.collection.insert_one(model)
         return inserted.inserted_id
 
-    def update(self, model):
-        self.collection.update_one({"_id": model.id}, {"$set": model})
+    def update(self, id, model):
+        self.collection.update_one({"_id": id}, {"$set": model})
         return {"message": "chat atualizado com sucesso"}
 
     def delete(self, id):
@@ -22,7 +22,9 @@ class ChatRepository:
         return assistant
 
     def get_history(self, id):
-        history = list(self.collection.find({"channel.id": id}, {"message": 1, "response": 1, "_id": 0}).sort("createdAt", -1).limit(20))[::-1]
+        history = list(self.collection
+                       .find({"channel.id": id}, {"message": 1, "response": 1, "_id": 0})
+                       .sort("createdAt", -1).limit(20))[::-1]
         return history
 
     def get_by_channel_id(self, id):

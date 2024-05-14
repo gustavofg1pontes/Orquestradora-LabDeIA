@@ -10,18 +10,18 @@ class ChatService:
     def __init__(self):
         self.chatRepository = ChatRepository()
 
-    def insert_one(self, model, assistant_id): #TODO: Terminar
+    def insert_one(self, model, assistant_id):  # TODO: Terminar
         chat = to_chat(model)
-        history = self.chatRepository.get_history(chat.channel["id"])
-        payload = jsonify({"history": history, "query": chat.message})
-        response = send_core_chat(assistant_id, payload)
+        # history = self.chatRepository.get_history(chat.channel["id"])
+        # payload = jsonify({"history": history, "query": chat.message})
+        # response = send_core_chat(assistant_id, payload)
 
-        if response.status_code == 200:
-            chat.response = response.json()
-            self.chatRepository.insert(chat)
-        else:
-            return jsonify({"error": "Assistente informado não existe"})
-        return {"response": chat.response}
+        # if response.status_code == 200:
+        #    chat.response = response.json()
+        #    self.chatRepository.insert(chat)
+        # else:
+        #    return jsonify({"error": "Assistente informado não existe"})
+        return chat.response
 
     def get(self, id):
         obj_id = ObjectId(id)
@@ -32,7 +32,7 @@ class ChatService:
     def activate_chat(self, id):
         chat = self.chatRepository.get_by_channel_id(id)
         if chat:
-            self.chatRepository.update({"_id": chat["_id"], "active": True}) #TODO: Verificar se o update está correto
+            self.chatRepository.update({"_id": chat["_id"], "active": True})
             return {"message": f"Chat com ID {id} atualizado com sucesso"}
         else:
             return {"error": "Chat não encontrado"}
@@ -40,7 +40,7 @@ class ChatService:
     def inactivate_chat(self, id):
         chat = self.chatRepository.get_by_channel_id(id)
         if chat:
-            self.chatRepository.update({"_id": chat["_id"], "active": False}) #TODO: Verificar se o update está correto
+            self.chatRepository.update({"_id": chat["_id"], "active": False})
             return {"message": f"Chat com ID {id} atualizado com sucesso"}
         else:
             return {"error": "Chat não encontrado"}

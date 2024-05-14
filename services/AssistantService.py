@@ -32,5 +32,5 @@ class AssistantService:
         obj_id = ObjectId(id)
         return self.assistantRepository.delete(obj_id)
 
-    def update(self, model):
-        return self.assistantRepository.update(model)
+    def update(self, id, model):
+        return self.assistantRepository.update(id, model)

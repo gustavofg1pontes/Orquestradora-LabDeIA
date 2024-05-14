@@ -22,8 +22,8 @@ class AuthRepository:
     def list(self):
         return list(self.collection.find())
 
-    def update(self, model):
-        self.collection.update_one({"_id": model.id}, {"$set": model})
+    def update(self, id, model):
+        self.collection.update_one({"_id": id}, {"$set": model})
         return {"message": "chat atualizado com sucesso"}
 
     def existsByEmail(self, email):
