@@ -2,7 +2,7 @@ from bson import ObjectId
 from flask import jsonify
 
 from models.Chat import to_chat
-from repositories.chatRepository import ChatRepository
+from repositories.ChatRepository import ChatRepository
 from utils.core import send_core_chat
 
 

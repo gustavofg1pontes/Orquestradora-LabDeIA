@@ -4,7 +4,7 @@ import bcrypt
 from flask import jsonify
 import jwt
 from models.User import User
-from repositories.authRepository import AuthRepository
+from repositories.AuthRepository import AuthRepository
 
 secret = os.getenv("SECRET")
 

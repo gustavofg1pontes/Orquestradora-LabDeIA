@@ -1,4 +1,4 @@
-from repositories.documentRepository import DocumentRepository
+from repositories.DocumentRepository import DocumentRepository
 
 
 class DocumentService:

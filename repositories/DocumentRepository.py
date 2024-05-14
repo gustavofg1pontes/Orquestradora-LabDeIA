@@ -4,6 +4,7 @@ from config.db import collection_config
 class DocumentRepository:
     def __init__(self):
         self.collection = collection_config("documents")
+
     def insert(self, model):
         self.collection.insert_one(model)
 

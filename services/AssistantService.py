@@ -1,6 +1,6 @@
 from bson import ObjectId
 from models.Assistant import to_assistant
-from repositories.assistantRepository import AssistantRepository
+from repositories.AssistantRepository import AssistantRepository
 
 
 class AssistantService:
