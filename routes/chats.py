@@ -4,21 +4,20 @@ from flask import Blueprint
 from config.db import collection_config
 from models.Chat import to_chat
 from utils.tokendec import token_required
-from utils.coreRoutes import initSession, sendCoreChat, closeSession
+from utils.core import send_core_chat
 
 chats_app = Blueprint('chats_app', __name__)
 collection = collection_config("chats")
 
 
-@chats_app.route('/chats/enviarMensagemLLM/<assistantName>', methods=['POST'])
+@chats_app.route('/chats/enviarMensagemLLM/<assistant_id>', methods=['POST'])
 @token_required
-def enviar_mensagem_llm(assistantName):
+def enviar_mensagem_llm(assistant_id):
     chat = to_chat(request.json)
-    initSession(assistantName) # TODO see utils/coreRoutes.py
 
     history = list(collection.find({"channel.id": chat.channel['id']}, {"message": 1, "response": 1, "_id": 0}).sort("createdAt", -1).limit(20))[::-1]
     payload = jsonify({"history": history, "query": chat.message})
-    response = sendCoreChat(assistantName, payload)
+    response = send_core_chat(assistant_id, payload)
 
     if response.status_code == 200:
         chat.response = response.json()
@@ -26,7 +25,6 @@ def enviar_mensagem_llm(assistantName):
         return jsonify({"error": "Assistente informado não existe"}), 404
 
     collection.insert_one(chat.to_dict())
-    closeSession(assistantName)
     return jsonify({"response": chat.response}), 200
 
 

@@ -1,4 +1,4 @@
-ALLOWED_EXTENSIONS = {'pdf', 'txt', 'docx'}
+ALLOWED_EXTENSIONS = {'md', 'txt'}
 
 
 def allowed_file(filename):
