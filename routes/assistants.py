@@ -9,12 +9,12 @@ assistantService = AssistantService()
 
 @assistants_app.route("/assistants/add", methods=['POST'])
 def add_assistant():
-    inserted_id = assistantService.insert_one(request.json)
+    response_insert = assistantService.insert_one(request.json)
     
-    response_data = {"id": str(inserted_id)}
+    response_data = {"id": str(response_insert["id"]), "token": str(response_insert["token"])}
     response = jsonify(response_data)
     response.status_code = 201
-    response.headers["Location"] = f"/assistants/get/{inserted_id}"
+    response.headers["Location"] = f"/assistants/get/{response_insert['id']}"
     response.content_type = "application/json"
     
     return response

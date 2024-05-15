@@ -17,6 +17,7 @@ def generate_and_save_key(assistant_id):
     token = generate_key()
     with open(tokens_file, 'a') as file:
         file.write(f'{assistant_id}\n{token}\n\n')
+    return token
 
 
 def find_key(key):
@@ -31,7 +32,7 @@ def find_key(key):
 
 
 # Decorator to require an API key
-def require_api_key(route_function):
+def api_key_required(route_function):
     @wraps(route_function)
     def wrapper(*args, **kwargs):
         api_key_header = request.headers.get('X-API-Key')
