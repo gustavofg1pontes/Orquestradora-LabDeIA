@@ -6,12 +6,12 @@ class AssistantRepository:
         self.collection = collection_config("assistants")
 
     def insert(self, model):
-        inserted = self.collection.insert_one(model)
-        return inserted.inserted_id
+        inserted_id = self.collection.insert_one(model).inserted_id
+        return inserted_id
 
     def delete(self, id):
         self.collection.delete_one({"_id": id})
-        return {"message": "assistente deletado com sucesso"}
+        return {"message": "Assistente deletado com sucesso"}
 
     def get(self, id):
         assistant = self.collection.find_one({"_id": id})
@@ -22,4 +22,4 @@ class AssistantRepository:
 
     def update(self, id, model):
         self.collection.update_one({"_id": id}, {"$set": model})
-        return {"message": "assistente atualizado com sucesso"}
+        return {"message": "Assistente atualizado com sucesso"}

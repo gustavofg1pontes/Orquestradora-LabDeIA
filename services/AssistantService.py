@@ -28,7 +28,7 @@ class AssistantService:
         assistants = self.assistantRepository.list()
         for assistant in assistants:
             assistant["_id"] = str(assistant["_id"])
-        return jsonify(assistants)
+        return jsonify(assistants), 200
 
     def delete(self, id):
         obj_id = ObjectId(id)
@@ -36,4 +36,5 @@ class AssistantService:
 
     def update(self, id, model):
         obj_id = ObjectId(id)
-        return jsonify(self.assistantRepository.update(obj_id, model)), 200
+        assistant = to_assistant(model)
+        return jsonify(self.assistantRepository.update(obj_id, assistant)), 200

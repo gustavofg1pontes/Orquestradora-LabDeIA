@@ -1,18 +1,15 @@
-from bson import ObjectId
 from flask import request, jsonify
 from flask import Blueprint
 from config.db import collection_config
-from models.Assistant import to_assistant
+from services.AssistantService import AssistantService
 
 assistants_app = Blueprint('assistants_app', __name__)
 collection = collection_config("assistants")
-
+assistantService = AssistantService()
 
 @assistants_app.route("/assistants/add", methods=['POST'])
 def add_assistant():
-    assistant = to_assistant(request.json)
-
-    inserted_id = collection.insert_one(assistant.to_dict()).inserted_id
+    inserted_id = assistantService.insert_one(request)
     
     response_data = {"id": str(inserted_id)}
     response = jsonify(response_data)
@@ -25,31 +22,19 @@ def add_assistant():
 
 @assistants_app.route("/assistants/list", methods=['GET'])
 def get_assistants():
-    assistants = list(collection.find())
-    for assistant in assistants:
-        assistant['_id'] = str(assistant['_id'])
-    return jsonify(assistants), 200
+    return assistantService.list()
 
 
 @assistants_app.route("/assistants/get/<id>", methods=['GET'])
 def get_assistant(id):
-    objId = ObjectId(id)
-    assistant = collection.find_one({"_id": objId})
-    assistant['_id'] = str(assistant['_id'])
-    return jsonify(assistant), 200
+    return assistantService.get(id)
 
 
 @assistants_app.route("/assistants/update/<id>", methods=['PUT'])
 def update_assistant(id):
-    objId = ObjectId(id)
-    assitant = to_assistant(request.json)
-
-    collection.update_one({"_id": objId}, {"$set": assitant.to_dict()})
-    return jsonify({"message": f"Assistente atualizada com sucesso"}), 200
+    return assistantService.update(id, request)
 
 
 @assistants_app.route("/assistants/delete/<id>", methods=['DELETE'])
-def delete_assistante(id):
-    objId = ObjectId(id)
-    collection.delete_one({"_id": objId})
-    return jsonify({"message": f"Assistente deletado com sucesso"}), 200
+def delete_assistant(id):
+    return assistantService.delete(id)
