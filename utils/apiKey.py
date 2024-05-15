@@ -4,6 +4,8 @@ from functools import wraps
 
 from flask import request, jsonify
 
+from config.assistant import AssistantConfig
+
 tokens_file = './tokens.txt'
 
 
@@ -44,6 +46,7 @@ def api_key_required(route_function):
         if not assistant_id:
             return jsonify({"message": "Invalid X-API-Key"}), 401
 
+        AssistantConfig.set_assistant_id(assistant_id)
         return route_function(*args, **kwargs)
 
     return wrapper

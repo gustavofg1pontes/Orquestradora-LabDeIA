@@ -1,18 +1,18 @@
 from flask import request
 from flask import Blueprint
-from config.db import collection_config
+
+from utils.apiKey import api_key_required
 from utils.tokendec import token_required
 from services.ChatService import ChatService
 
 chats_app = Blueprint('chats_app', __name__)
-collection = collection_config("chats")
 chatService = ChatService()
 
 
-@chats_app.route('/chats/enviarMensagemLLM/<assistant_id>', methods=['POST'])
-@token_required
-def enviar_mensagem_llm(assistant_id):
-    return chatService.insert_one(request, assistant_id)
+@chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
+@api_key_required
+def enviar_mensagem_llm():
+    return chatService.insert_one(request.json)
 
 
 @chats_app.route("/chats/ativar/<channel_id>", methods=['PUT'])

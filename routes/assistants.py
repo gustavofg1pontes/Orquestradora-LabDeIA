@@ -1,10 +1,9 @@
 from flask import request, jsonify
 from flask import Blueprint
-from config.db import collection_config
 from services.AssistantService import AssistantService
+from utils.apiKey import api_key_required
 
 assistants_app = Blueprint('assistants_app', __name__)
-collection = collection_config("assistants")
 assistantService = AssistantService()
 
 @assistants_app.route("/assistants/add", methods=['POST'])
@@ -21,6 +20,7 @@ def add_assistant():
 
 
 @assistants_app.route("/assistants/list", methods=['GET'])
+@api_key_required
 def get_assistants():
     return assistantService.list()
 

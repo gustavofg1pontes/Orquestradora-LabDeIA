@@ -1,4 +1,3 @@
-from bson import ObjectId
 from flask import jsonify
 
 from models.Chat import to_chat
@@ -10,15 +9,16 @@ class ChatService:
     def __init__(self):
         self.chatRepository = ChatRepository()
 
-    def insert_one(self, model, assistant_id):
+    def insert_one(self, model):
         chat = to_chat(model)
-
+        print(chat.assistant_id)
         if not chat.isActive:
             return jsonify({"error": "Chat inativo"}), 404
 
         history = self.chatRepository.get_history(chat.channel["id"])
         payload = jsonify({"history": history, "query": chat.message})
-        response = send_core_chat(assistant_id, payload)
+
+        response = send_core_chat(chat.assistant_id, payload)
 
         if response.status_code != 200:
             return jsonify({"error": "Assistente informado não existe"}), 404
@@ -31,7 +31,7 @@ class ChatService:
         chat.tokens["in"] = response_json["tokens"]["in"]
         chat.tokens["out"] = response_json["tokens"]["out"]
 
-        self.chatRepository.insert(chat)
+        self.chatRepository.insert(chat.to_dict())
         return jsonify({"response": chat.response}), 200
 
     def get(self, channel_id):

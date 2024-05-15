@@ -1,6 +1,7 @@
 from datetime import datetime
 from models.DocumentType import DocumentType
 
+
 class Document:
     def __init__(self, filepath, filename, type, assistant_id, createdAt):
         self.filepath = filepath
@@ -20,7 +21,8 @@ class Document:
 
 
 def document_from_dict(dict):
-    return Document(dict["filepath"], dict["filename"], DocumentType(dict["type"].upper()), dict["assistant_id"], datetime.now())
+    return Document(dict["filepath"], dict["filename"], DocumentType(dict["type"].upper()), dict["assistant_id"],
+                    datetime.now())
 
 
 def to_document(filepath, filename, dict):

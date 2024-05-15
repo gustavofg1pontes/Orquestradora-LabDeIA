@@ -1,8 +1,10 @@
 from datetime import datetime
 
+from config.assistant import AssistantConfig
+
 
 class Chat:
-    def __init__(self, id, message_service, username, assistant_id, active, message, createdAt):
+    def __init__(self, id, message_service, username, active, message, createdAt):
         self.channel = {
             "id": id,
             "message_service": message_service
@@ -12,10 +14,14 @@ class Chat:
             "out": ""
         }
         self.username = username
-        self.assistant_id = assistant_id
+        self.assistant_id = AssistantConfig.get_assistant_id()
         self.isActive = active
         self.message = message
         self.response = ""
+        self.tokensCount = {
+            "in": 0,
+            "out": 0
+        }
         self.createdAt = createdAt
 
     def to_dict(self):
@@ -33,6 +39,10 @@ class Chat:
             "active": self.isActive,
             "message": self.message,
             "response": self.response,
+            "tokensCount": {
+                "in": self.tokensCount["in"],
+                "out": self.tokensCount["out"]
+            },
             "createdAt": self.createdAt
         }
 
@@ -44,5 +54,5 @@ class Chat:
 
 
 def to_chat(dict):
-    return Chat(dict["id"], dict["message_service"], dict["username"], dict["assistant_id"], dict["active"],
+    return Chat(dict["id"], dict["message_service"], dict["username"], dict["active"],
                 dict["message"], datetime.now())
