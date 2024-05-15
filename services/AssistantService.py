@@ -17,9 +17,12 @@ class AssistantService:
         if not assistant.owner_id:
             return jsonify({"message": "Owner id can't be null"}), 400
         inserted_id = self.assistantRepository.insert(assistant.to_dict())
-        generate_and_save_key(inserted_id)
+        token = generate_and_save_key(inserted_id)
 
-        return inserted_id
+        return {
+            "id": str(inserted_id),
+            "token": token
+        }
 
     def get(self, id):
         obj_id = ObjectId(id)

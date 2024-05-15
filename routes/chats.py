@@ -3,6 +3,7 @@ from flask import request, jsonify
 from flask import Blueprint
 from config.db import collection_config
 from models.Chat import to_chat
+from utils.apiKey import api_key_required
 from utils.tokendec import token_required
 from utils.core import send_core_chat
 from services.ChatService import ChatService
@@ -11,8 +12,8 @@ chats_app = Blueprint('chats_app', __name__)
 collection = collection_config("chats")
 chatService = ChatService()
 
-@chats_app.route('/chats/enviarMensagemLLM/<assistant_id>', methods=['POST'])
-@token_required
+@chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
+@api_key_required
 def enviar_mensagem_llm(assistant_id):  #TODO: verify if the chat is active = True, else return error: chat inactive
     chat = to_chat(request.json)
 
