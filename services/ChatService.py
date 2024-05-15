@@ -18,30 +18,34 @@ class ChatService:
 
         # if response.status_code == 200:
         #    chat.response = response.json()
-        #    self.chatRepository.insert(chat)
         # else:
-        #    return jsonify({"error": "Assistente informado não existe"})
-        #return chat.response
+        #    return jsonify({"error": "Assistente informado não existe"}), 404
+        #
+        #self.chatRepository.insert(chat)
+        #return jsonify({"response": chat.response}), 200
 
-    def get(self, id):
-        obj_id = ObjectId(id)
-        chat = self.chatRepository.get(obj_id)
-        chat["_id"] = str(chat["_id"])
-        return jsonify(chat), 200
-
-    def activate_chat(self, id):
-        chat = self.chatRepository.get_by_channel_id(id)
-        if chat:
-            self.chatRepository.update({"_id": chat["_id"], "active": True})
-            return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
+    def get(self, channel_id):
+        chats = self.chatRepository.get(channel_id)
+        for chat in chats:
+            chat["_id"] = str(chat["_id"])
+        if chats:
+            return jsonify(chats), 200
         else:
             return jsonify({"error": "Chat não encontrado"}), 404
 
-    def inactivate_chat(self, id):
-        chat = self.chatRepository.get_by_channel_id(id)
+    def activate_chat(self, channel_id):
+        chat = self.chatRepository.get_by_channel_id(channel_id)
         if chat:
-            self.chatRepository.update({"_id": chat["_id"], "active": False})
-            return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
+            self.chatRepository.update(channel_id, {"active": True})
+            return jsonify({"message": f"Chat com ID {channel_id} atualizado com sucesso"}), 200
+        else:
+            return jsonify({"error": "Chat não encontrado"}), 404
+
+    def inactivate_chat(self, channel_id):
+        chat = self.chatRepository.get_by_channel_id(channel_id)
+        if chat:
+            self.chatRepository.update(channel_id, {"active": False})
+            return jsonify({"message": f"Chat com ID {channel_id} atualizado com sucesso"}), 200
         else:
             return jsonify({"error": "Chat não encontrado"}), 404
 
@@ -61,4 +65,4 @@ class ChatService:
         chats = self.chatRepository.list_inactives()
         for chat in chats:
             chat["_id"] = str(chat["_id"])
-        return jsonify(chats)
+        return jsonify(chats), 200

@@ -10,15 +10,15 @@ class ChatRepository:
         return inserted.inserted_id
 
     def update(self, id, model):
-        self.collection.update_one({"_id": id}, {"$set": model})
+        self.collection.update_many({"channel.id": id}, {"$set": model})
         return {"message": "chat atualizado com sucesso"}
 
     def delete(self, id):
         self.collection.delete_one({"_id": id})
         return {"message": "chat deletado com sucesso"}
 
-    def get(self, id):
-        assistant = self.collection.find_one({"_id": id})
+    def get(self, channel_id):
+        assistant = list(self.collection.find({"channel.id": channel_id}))
         return assistant
 
     def get_history(self, id):
