@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = 'http://<core-url>/api/v1'
+BASE_URL = 'http://<core-url>/api/v1'    #TODO: Change this to the core URL
 
 
 def create_knowledge_base(assistant_id):
