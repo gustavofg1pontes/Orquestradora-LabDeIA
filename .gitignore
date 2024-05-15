@@ -4,3 +4,5 @@ tokens.txt
 .idea/*
 *.iml
 __pycache__
+documents
+documents/*

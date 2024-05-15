@@ -7,6 +7,10 @@ class Chat:
             "id": id,
             "message_service": message_service
         }
+        self.tokens = {
+            "in": "",
+            "out": ""
+        }
         self.username = username
         self.assistant_id = assistant_id
         self.isActive = active
@@ -19,6 +23,10 @@ class Chat:
             "channel": {
                 "id": self.channel["id"],
                 "message_service": self.channel["message_service"]
+            },
+            "tokens": {
+                "in": self.tokens["in"],
+                "out": self.tokens["out"]
             },
             "username": self.username,
             "assistant_id": self.assistant_id,

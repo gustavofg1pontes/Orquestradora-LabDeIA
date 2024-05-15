@@ -10,19 +10,29 @@ class ChatService:
     def __init__(self):
         self.chatRepository = ChatRepository()
 
-    def insert_one(self, model, assistant_id):  # TODO: Terminar
+    def insert_one(self, model, assistant_id):
         chat = to_chat(model)
-        # history = self.chatRepository.get_history(chat.channel["id"])
-        # payload = jsonify({"history": history, "query": chat.message})
-        # response = send_core_chat(assistant_id, payload)
 
-        # if response.status_code == 200:
-        #    chat.response = response.json()
-        # else:
-        #    return jsonify({"error": "Assistente informado não existe"}), 404
-        #
-        #self.chatRepository.insert(chat)
-        #return jsonify({"response": chat.response}), 200
+        if not chat.isActive:
+            return jsonify({"error": "Chat inativo"}), 404
+
+        history = self.chatRepository.get_history(chat.channel["id"])
+        payload = jsonify({"history": history, "query": chat.message})
+        response = send_core_chat(assistant_id, payload)
+
+        if response.status_code != 200:
+            return jsonify({"error": "Assistente informado não existe"}), 404
+
+        response_json = response.json()
+        if "response" not in response_json:
+            return jsonify({"error": "Não foi encontrado uma resposta do core"}), 404
+
+        chat.response = response_json["response"]
+        chat.tokens["in"] = response_json["tokens"]["in"]
+        chat.tokens["out"] = response_json["tokens"]["out"]
+
+        self.chatRepository.insert(chat)
+        return jsonify({"response": chat.response}), 200
 
     def get(self, channel_id):
         chats = self.chatRepository.get(channel_id)

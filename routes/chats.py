@@ -3,6 +3,7 @@ from flask import request, jsonify
 from flask import Blueprint
 from config.db import collection_config
 from models.Chat import to_chat
+from utils.apiKey import require_api_key
 from utils.tokendec import token_required
 from utils.core import send_core_chat
 from services.ChatService import ChatService
@@ -11,22 +12,11 @@ chats_app = Blueprint('chats_app', __name__)
 collection = collection_config("chats")
 chatService = ChatService()
 
+
 @chats_app.route('/chats/enviarMensagemLLM/<assistant_id>', methods=['POST'])
 @token_required
-def enviar_mensagem_llm(assistant_id):  #TODO: verify if the chat is active = True, else return error: chat inactive
-    chat = to_chat(request.json)
-
-    history = list(collection.find({"channel.id": chat.channel['id']}, {"message": 1, "response": 1, "_id": 0}).sort("createdAt", -1).limit(20))[::-1]
-    payload = jsonify({"history": history, "query": chat.message})
-    response = send_core_chat(assistant_id, payload)
-
-    if response.status_code == 200:
-        chat.response = response.json()
-    else:
-        return jsonify({"error": "Assistente informado não existe"}), 404
-
-    collection.insert_one(chat.to_dict())
-    return jsonify({"response": chat.response}), 200
+def enviar_mensagem_llm(assistant_id):
+    return chatService.insert_one(request, assistant_id)
 
 
 @chats_app.route("/chats/ativar/<channel_id>", methods=['PUT'])
