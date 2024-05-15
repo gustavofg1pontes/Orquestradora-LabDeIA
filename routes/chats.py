@@ -1,11 +1,7 @@
-from bson import ObjectId
-from flask import request, jsonify
+from flask import request
 from flask import Blueprint
 from config.db import collection_config
-from models.Chat import to_chat
-from utils.apiKey import require_api_key
 from utils.tokendec import token_required
-from utils.core import send_core_chat
 from services.ChatService import ChatService
 
 chats_app = Blueprint('chats_app', __name__)
