@@ -11,13 +11,11 @@ class ChatService:
 
     def insert_one(self, model):
         chat = to_chat(model)
-        print(chat.assistant_id)
         if not chat.isActive:
             return jsonify({"error": "Chat inativo"}), 404
 
         history = self.chatRepository.get_history(chat.channel["id"])
-        payload = jsonify({"history": history, "query": chat.message})
-
+        payload = {"history": history, "query": chat.message}
         response = send_core_chat(chat.assistant_id, payload)
 
         if response.status_code != 200:
