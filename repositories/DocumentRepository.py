@@ -6,13 +6,15 @@ class DocumentRepository:
         self.collection = collection_config("documents")
 
     def insert(self, model):
-        self.collection.insert_one(model)
+        inserted_id = self.collection.insert_one(model).inserted_id
+        return inserted_id
 
     def delete(self, id):
         self.collection.delete_one({"_id": id})
+        return {"message": "Document deleted"}
 
     def get(self, id):
-        self.collection.find_one({"_id": id})
+        return self.collection.find_one({"_id": id})
 
     def list(self):
         return list(self.collection.find())

@@ -21,44 +21,44 @@ class ChatService:
         #    self.chatRepository.insert(chat)
         # else:
         #    return jsonify({"error": "Assistente informado não existe"})
-        return chat.response
+        #return chat.response
 
     def get(self, id):
         obj_id = ObjectId(id)
         chat = self.chatRepository.get(obj_id)
         chat["_id"] = str(chat["_id"])
-        return chat
+        return jsonify(chat), 200
 
     def activate_chat(self, id):
         chat = self.chatRepository.get_by_channel_id(id)
         if chat:
             self.chatRepository.update({"_id": chat["_id"], "active": True})
-            return {"message": f"Chat com ID {id} atualizado com sucesso"}
+            return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
         else:
-            return {"error": "Chat não encontrado"}
+            return jsonify({"error": "Chat não encontrado"}), 404
 
     def inactivate_chat(self, id):
         chat = self.chatRepository.get_by_channel_id(id)
         if chat:
             self.chatRepository.update({"_id": chat["_id"], "active": False})
-            return {"message": f"Chat com ID {id} atualizado com sucesso"}
+            return jsonify({"message": f"Chat com ID {id} atualizado com sucesso"}), 200
         else:
-            return {"error": "Chat não encontrado"}
+            return jsonify({"error": "Chat não encontrado"}), 404
 
     def list(self):
         chats = self.chatRepository.list()
         for chat in chats:
             chat["_id"] = str(chat["_id"])
-        return chats
+        return jsonify(chats), 200
 
     def list_actives(self):
         chats = self.chatRepository.list_actives()
         for chat in chats:
             chat["_id"] = str(chat["_id"])
-        return chats
+        return jsonify(chats), 200
 
     def list_inactives(self):
         chats = self.chatRepository.list_inactives()
         for chat in chats:
             chat["_id"] = str(chat["_id"])
-        return chats
+        return jsonify(chats)

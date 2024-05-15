@@ -3,7 +3,7 @@ from flask import Blueprint
 
 from services.AuthService import AuthService
 
-auth_service = AuthService("users")
+auth_service = AuthService()
 auth_api = Blueprint('auth_api', __name__)
 
 

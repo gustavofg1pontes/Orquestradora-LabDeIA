@@ -12,5 +12,5 @@ def generate_token():
 
 def generate_and_save_token(assistant_id):
     token = generate_token()
-    with open(tokens_file, 'w') as file:
+    with open(tokens_file, 'a') as file:
         file.write(f'{assistant_id}/{token}\n')
