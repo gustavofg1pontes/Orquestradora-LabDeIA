@@ -168,9 +168,23 @@ The project is organized into three main sections: routes, models, and database 
         "assistant_id": "id",
         "createdAt": "2021-09-01T00:00:00"
     }
-- **PUT /documents/path/get/&lt;id&gt;**: Get the file path of a specific document. 
+- **PUT /documents/path/get/&lt;id&gt;**: Get the file path of a specific document.
 - **GET /documents/download/&lt;id&gt;**: Download a specific document.
 - **DELETE /documents/delete/&lt;id&gt;**: Delete a specific document.
+
+##### The documents folder architecture is:
+
+    Orquestradora-LabDeIA
+      └── documents
+          ├── <assistant id>
+          │   ├── knowledge
+          │   │   └── rag.md
+          │   └── prompt.txt
+          │   
+          └── <assistant id>
+              ├── knowledge
+              │   └── rag.md
+              └── prompt.txt
 
 #### Auth
 
