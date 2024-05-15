@@ -3,6 +3,7 @@ from flask import jsonify
 
 from models.Assistant import to_assistant
 from repositories.AssistantRepository import AssistantRepository
+from utils.apiKey import generate_and_save_key
 
 
 class AssistantService:
@@ -13,10 +14,12 @@ class AssistantService:
         assistant = to_assistant(model)
         if not assistant.name:
             return jsonify({"message": "Assistant name can't be null"}), 400
-        # if not assistant.owner_id:
-        #    return {"message": "Assistant owner_id can't be null"}
+        if not assistant.owner_id:
+            return jsonify({"message": "Owner id can't be null"}), 400
+        inserted_id = self.assistantRepository.insert(assistant.to_dict())
+        generate_and_save_key(inserted_id)
 
-        return self.assistantRepository.insert(assistant.to_dict())
+        return inserted_id
 
     def get(self, id):
         obj_id = ObjectId(id)
