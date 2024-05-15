@@ -8,6 +8,7 @@ from models.Document import to_document, document_from_dict
 from models.DocumentType import DocumentType
 from repositories.DocumentRepository import DocumentRepository
 from utils.documents import allowed_file
+from utils.core import create_knowledge_base
 
 
 class DocumentService:
@@ -40,6 +41,8 @@ class DocumentService:
 
             document.filepath = document_folder
             file.save(os.path.join(document_folder, filename))
+            if document.type == DocumentType.RAG:
+                create_knowledge_base(document.assistant_id)
             return self.documentRepository.insert(document.to_dict())
 
         return jsonify({"message": "Documento não inserido"}), 400
