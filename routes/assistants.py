@@ -9,7 +9,7 @@ assistantService = AssistantService()
 
 @assistants_app.route("/assistants/add", methods=['POST'])
 def add_assistant():
-    inserted_id = assistantService.insert_one(request)
+    inserted_id = assistantService.insert_one(request.json)
     
     response_data = {"id": str(inserted_id)}
     response = jsonify(response_data)
@@ -32,7 +32,7 @@ def get_assistant(id):
 
 @assistants_app.route("/assistants/update/<id>", methods=['PUT'])
 def update_assistant(id):
-    return assistantService.update(id, request)
+    return assistantService.update(id, request.json)
 
 
 @assistants_app.route("/assistants/delete/<id>", methods=['DELETE'])

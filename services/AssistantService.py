@@ -16,7 +16,7 @@ class AssistantService:
         # if not assistant.owner_id:
         #    return {"message": "Assistant owner_id can't be null"}
 
-        return self.assistantRepository.insert(assistant)
+        return self.assistantRepository.insert(assistant.to_dict())
 
     def get(self, id):
         obj_id = ObjectId(id)
@@ -36,5 +36,4 @@ class AssistantService:
 
     def update(self, id, model):
         obj_id = ObjectId(id)
-        assistant = to_assistant(model)
-        return jsonify(self.assistantRepository.update(obj_id, assistant)), 200
+        return jsonify(self.assistantRepository.update(obj_id, model)), 200

@@ -1,13 +1,9 @@
 from flask import request, jsonify
 from flask import Blueprint
 
-from config.db import collection_config
-
 from services.DocumentService import DocumentService
 
 documents_app = Blueprint('documents_app', __name__)
-collection = collection_config("documents")
-collection_assistants = collection_config("assistants")
 documentService = DocumentService()
 
 
