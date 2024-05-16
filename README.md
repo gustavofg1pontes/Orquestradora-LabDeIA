@@ -10,6 +10,7 @@ The project is organized into three main sections: routes, models, and database 
 ### Routes
 
 # IMPORTANT
+
 **All routes (except for the `/chats/enviarMensagemLLM` route) require a LOGIN TOKEN to be passed in the header.**
 That's 'cause they should be run by a logged client on our frontend.
 The token can be obtained by logging in with the `/auth/login` route.
@@ -17,7 +18,7 @@ The token can be obtained by logging in with the `/auth/login` route.
 ```json
 // header:
 {
-    "Authorization": "Bearer <token>"
+  "Authorization": "Bearer <token>"
 }
 ```
 
@@ -91,6 +92,10 @@ The token can be obtained by logging in with the `/auth/login` route.
       "id": "+551300000000",
       "message_service": "Whatsapp"
     },
+    "tokens": {
+      "in": 1,
+      "out": 1
+    },
     "username": "nome",
     "assistant_id": "id",
     "active": true,
@@ -108,6 +113,10 @@ The token can be obtained by logging in with the `/auth/login` route.
             "id": "+551300000000",
             "message_service": "Whatsapp"
         },
+        "tokens": {
+            "in": 1,
+            "out": 1
+        },
         "username": "nome",
         "assistant_id": "id",
         "active": true,
@@ -116,24 +125,28 @@ The token can be obtained by logging in with the `/auth/login` route.
         "createdAt": "05-09-2024T19:57:00"
         }
     ]
-- **GET /chats/listarAtivos**: List all active chats.
-  ```json
-    // response:
-    [
-        {
-        "_id": "id",
-        "channel": {
-            "id": "+551300000000",
-            "message_service": "Whatsapp"
-        },
-        "username": "nome",
-        "assistant_id": "id",
-        "active": True,
-        "message": "mensagem do Usuario",
-        "response": "resposta LLM",
-        "createdAt": "05-09-2024T19:57:00"
-        }
-    ]
+  - **GET /chats/listarAtivos**: List all active chats.
+    ```json
+      // response:
+      [
+          {
+          "_id": "id",
+          "channel": {
+              "id": "+551300000000",
+              "message_service": "Whatsapp"
+          },
+          "tokens": {
+              "in": 1,
+              "out": 1
+          },
+          "username": "nome",
+          "assistant_id": "id",
+          "active": True,
+          "message": "mensagem do Usuario",
+          "response": "resposta LLM",
+          "createdAt": "05-09-2024T19:57:00"
+          }
+      ]
 - **GET /chats/listarInativos**: List all inactive chats.
   ```json
     // response:
@@ -143,6 +156,10 @@ The token can be obtained by logging in with the `/auth/login` route.
         "channel": {
             "id": "+551300000000",
             "message_service": "Whatsapp"
+        },
+        "tokens": {
+            "in": 1,
+            "out": 1
         },
         "username": "nome",
         "assistant_id": "id",
@@ -247,6 +264,7 @@ The token can be obtained by logging in with the `/auth/login` route.
 
 The project utilizes MongoDB as the database. Each model corresponds to a collection in the MongoDB database.
 We have two packages on the code that are responsible for the database interaction: `repositories` and `services`.
+
 - **Repositories**: The repositories package contains the classes that interact with the database.
 - **Services**: The services package contains the classes that handle the business logic of the application.
 
