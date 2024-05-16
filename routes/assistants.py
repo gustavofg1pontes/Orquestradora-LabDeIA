@@ -11,7 +11,7 @@ assistantService = AssistantService()
 def add_assistant():
     response_insert = assistantService.insert_one(request.json)
     
-    response_data = {"id": str(response_insert["id"]), "token": str(response_insert["token"])}
+    response_data = {"id": str(response_insert["id"]), "api_key": str(response_insert["api_key"])}
     response = jsonify(response_data)
     response.status_code = 201
     response.headers["Location"] = f"/assistants/get/{response_insert['id']}"

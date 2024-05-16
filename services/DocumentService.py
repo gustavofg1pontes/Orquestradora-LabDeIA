@@ -41,8 +41,8 @@ class DocumentService:
 
             document.filepath = document_folder
             file.save(os.path.join(document_folder, filename))
-            if document.type == DocumentType.RAG:
-                create_knowledge_base(document.assistant_id)
+            #if document.type == DocumentType.RAG:
+                #create_knowledge_base(document.assistant_id)
             return self.documentRepository.insert(document.to_dict())
 
         return jsonify({"message": "Documento não inserido"}), 400

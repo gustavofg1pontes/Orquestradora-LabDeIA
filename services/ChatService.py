@@ -16,6 +16,7 @@ class ChatService:
 
         history = self.chatRepository.get_history(chat.channel["id"])
         payload = {"history": history, "query": chat.message}
+
         response = send_core_chat(chat.assistant_id, payload)
 
         if response.status_code != 200:
@@ -29,6 +30,7 @@ class ChatService:
         chat.tokens["in"] = response_json["tokens"]["in"]
         chat.tokens["out"] = response_json["tokens"]["out"]
 
+        chat.response = "Resposta pronta da orquestradora!!! Assistant_id: " + chat.assistant_id
         self.chatRepository.insert(chat.to_dict())
         return jsonify({"response": chat.response}), 200
 

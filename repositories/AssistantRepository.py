@@ -17,6 +17,10 @@ class AssistantRepository:
         assistant = self.collection.find_one({"_id": id})
         return assistant
 
+    def findByKey(self, key):
+        assistant = self.collection.find_one({"api_key": key})
+        return assistant
+
     def list(self):
         return list(self.collection.find())
 

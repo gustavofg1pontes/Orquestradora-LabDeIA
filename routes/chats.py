@@ -1,17 +1,28 @@
-from flask import request
+from flask import request, jsonify
 from flask import Blueprint
 
+from config.assistant import AssistantConfig
+from services.AssistantService import AssistantService
 from utils.apiKey import api_key_required
 from utils.tokendec import token_required
 from services.ChatService import ChatService
 
 chats_app = Blueprint('chats_app', __name__)
 chatService = ChatService()
+assistantService = AssistantService()
 
 
 @chats_app.route('/chats/enviarMensagemLLM', methods=['POST'])
 @api_key_required
 def enviar_mensagem_llm():
+    # Get the assistant_id from the X-API-Key header
+    api_key_header = request.headers.get('X-API-Key')
+
+    assistant_id = assistantService.findByKey(api_key_header)["_id"]
+    if not assistant_id:
+        return jsonify({"message": "Invalid X-API-Key"}), 401
+
+    AssistantConfig.set_assistant_id(assistant_id)
     return chatService.insert_one(request.json)
 
 
