@@ -18,10 +18,6 @@ class Chat:
         self.isActive = active
         self.message = message
         self.response = ""
-        self.tokensCount = {
-            "in": 0,
-            "out": 0
-        }
         self.createdAt = createdAt
 
     def to_dict(self):
@@ -39,10 +35,6 @@ class Chat:
             "active": self.isActive,
             "message": self.message,
             "response": self.response,
-            "tokensCount": {
-                "in": self.tokensCount["in"],
-                "out": self.tokensCount["out"]
-            },
             "createdAt": self.createdAt
         }
 
