@@ -125,28 +125,29 @@ The token can be obtained by logging in with the `/auth/login` route.
         "createdAt": "05-09-2024T19:57:00"
         }
     ]
-  - **GET /chats/listarAtivos**: List all active chats.
-    ```json
-      // response:
-      [
-          {
-          "_id": "id",
-          "channel": {
-              "id": "+551300000000",
-              "message_service": "Whatsapp"
-          },
-          "tokens": {
-              "in": 1,
-              "out": 1
-          },
-          "username": "nome",
-          "assistant_id": "id",
-          "active": True,
-          "message": "mensagem do Usuario",
-          "response": "resposta LLM",
-          "createdAt": "05-09-2024T19:57:00"
-          }
-      ]
+  ```
+- **GET /chats/listarAtivos**: List all active chats.
+  ```json
+    // response:
+    [
+        {
+        "_id": "id",
+        "channel": {
+            "id": "+551300000000",
+            "message_service": "Whatsapp"
+        },
+        "tokens": {
+            "in": 1,
+            "out": 1
+        },
+        "username": "nome",
+        "assistant_id": "id",
+        "active": True,
+        "message": "mensagem do Usuario",
+        "response": "resposta LLM",
+        "createdAt": "05-09-2024T19:57:00"
+        }
+    ]
 - **GET /chats/listarInativos**: List all inactive chats.
   ```json
     // response:
