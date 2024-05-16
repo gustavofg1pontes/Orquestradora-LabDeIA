@@ -9,42 +9,58 @@ The project is organized into three main sections: routes, models, and database 
 
 ### Routes
 
+# IMPORTANT
+**All routes (except for the `/chats/enviarMensagemLLM` route) require a LOGIN TOKEN to be passed in the header.**
+That's 'cause they should be run by a logged client on our frontend.
+The token can be obtained by logging in with the `/auth/login` route.
+
+```json
+// header:
+{
+    "Authorization": "Bearer <token>"
+}
+```
+
 #### Assistants
 
 - **POST /assistants/add**: Add a new assistant.
   ```json
-  request:
+  // request:
   {
     "name": "Assistant Name",
     "owner_id": "Owner id"
   }
 - **GET /assistants/list**: List all assistants.
   ```json
-  response:
+  // response:
   [
     {
       "_id": "id",
       "name": "Assistant Name",
-      "company": "Company Name",
+      "owner_id": "owner id",
+      "api_key": "api key",
       "createdAt": "2021-09-01T00:00:00"
     }
   ]
 - **GET /assistants/get/&lt;id&gt;**: Get details of a specific assistant.
   ```json
-  response:
+  // response:
   {
-    "_id": "id",
-    "name": "Assistant Name",
-    "company": "Company Name",
-    "createdAt": "2021-09-01T00:00:00"
+      "_id": "id",
+      "name": "Assistant Name",
+      "owner_id": "owner id",
+      "api_key": "api key",
+      "createdAt": "2021-09-01T00:00:00"
   }
 - **PUT /assistants/update/&lt;id&gt;**: Update details of a specific assistant.
   ```json
-  request:
+  // request:
   {
-    "name": "Assistant Name",
-    "company": "Company Name"
-    "createdAt": "2021-09-01T00:00:00"
+      "_id": "id",
+      "name": "Assistant Name",
+      "owner_id": "owner id",
+      "api_key": "api key",
+      "createdAt": "2021-09-01T00:00:00"
   }
 - **DELETE /assistants/delete/&lt;id&gt;**: Delete a specific assistant.
 
@@ -52,18 +68,23 @@ The project is organized into three main sections: routes, models, and database 
 
 - **POST /chats/enviarMensagemLLM**: Send a message to LLM.
     ```json
-    request:
+    // header:
+    {
+        "X-API-Key": "api key"
+    }
+    ```
+    ```json
+    // request:
     {
       "id": "+5513988593464",
       "message_service": "Whatsapp",
       "username": "nome",
-      "assistant_id": "id",
       "active": true,
       "message": "mensagem do usuario"
     }
 - **GET /chats/get/&lt;id&gt;**: Get details of a specific chat.
   ```json
-  response:
+  // response:
   {
     "_id": "id",
     "channel": {
@@ -79,7 +100,7 @@ The project is organized into three main sections: routes, models, and database 
   }
 - **GET /chats/list**: List all chats.
   ```json
-    response:
+    // response:
     [
         {
         "_id": "id",
@@ -97,7 +118,7 @@ The project is organized into three main sections: routes, models, and database 
     ]
 - **GET /chats/listarAtivos**: List all active chats.
   ```json
-    response:
+    // response:
     [
         {
         "_id": "id",
@@ -115,7 +136,7 @@ The project is organized into three main sections: routes, models, and database 
     ]
 - **GET /chats/listarInativos**: List all inactive chats.
   ```json
-    response:
+    // response:
     [
         {
         "_id": "id",
@@ -138,7 +159,7 @@ The project is organized into three main sections: routes, models, and database 
 
 - **POST /documents/add**: Upload a new document.
     ```json
-    request form-data:
+    // request form-data:
     {
         "file": "file attached"
         "type": "rag or prompt",
@@ -146,7 +167,7 @@ The project is organized into three main sections: routes, models, and database 
     }
 - **GET /documents/list**: List all documents.
   ```json
-    response:
+    // response:
     [
         {
         "_id": "id",
@@ -159,7 +180,7 @@ The project is organized into three main sections: routes, models, and database 
     ]
 - **GET /documents/get/&lt;id&gt;**: Get details of a specific document.
   ```json
-    response:
+    // response:
     {
           "_id": "id",
         "filepath": "file path",
@@ -190,12 +211,12 @@ The project is organized into three main sections: routes, models, and database 
 
 - **POST /auth/login**: Login to the application.
     ```json
-    request:
+    // request:
     {
         "email": "user email",
         "password": "password"
     }
-    response:
+    // response:
     {
         "token": "access token",
         "user": {
@@ -206,7 +227,7 @@ The project is organized into three main sections: routes, models, and database 
     }
 - **POST /auth/register**: Register a new user.
     ```json
-    request:
+    // request:
     {
         "name": "name"
         "email": "user email",
@@ -225,6 +246,9 @@ The project is organized into three main sections: routes, models, and database 
 ### Database Interaction
 
 The project utilizes MongoDB as the database. Each model corresponds to a collection in the MongoDB database.
+We have two packages on the code that are responsible for the database interaction: `repositories` and `services`.
+- **Repositories**: The repositories package contains the classes that interact with the database.
+- **Services**: The services package contains the classes that handle the business logic of the application.
 
 ## Additional Information
 
@@ -238,9 +262,10 @@ The project utilizes MongoDB as the database. Each model corresponds to a collec
 To set up the project locally, follow these steps:
 
 1. Clone the repository.
-2. Run `cp .env.example .env` to create a new `.env` file and set it up using your mongodb connection url.
+2. Run `cp .env.example .env` to create a new `.env` file and set it up according to the required.
 3. Install the required dependencies using pip: `pip install -r requirements.txt`.
-4. Run the Flask application on waitress running: `waitress-serve --port=8080 --call main:create_app`.
+4. Ensure that you have the core application running on your local machine.
+5. Run the Flask application on waitress running: `waitress-serve --port=8080 --call main:create_app`.
 
 ## Contributing
 
