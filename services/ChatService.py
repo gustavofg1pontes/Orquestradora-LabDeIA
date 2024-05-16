@@ -30,7 +30,6 @@ class ChatService:
         chat.tokens["in"] = response_json["tokens"]["in"]
         chat.tokens["out"] = response_json["tokens"]["out"]
 
-        chat.response = "Resposta pronta da orquestradora!!! Assistant_id: " + chat.assistant_id
         self.chatRepository.insert(chat.to_dict())
         return jsonify({"response": chat.response}), 200
 
