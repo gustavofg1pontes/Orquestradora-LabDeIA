@@ -1,6 +1,7 @@
+import os
 import requests
 
-BASE_URL = 'http://<core-url>/api/v1'    #TODO: Change this to the core URL
+BASE_URL = os.getenv("CORE_API_BASE_URL")
 
 
 def create_knowledge_base(assistant_id):
@@ -12,5 +13,5 @@ def create_knowledge_base(assistant_id):
 
 def send_core_chat(assistant_id, payload):
     url = f'{BASE_URL}/llm/{assistant_id}/query'
-    response = requests.post(url, payload)
+    response = requests.post(url, None, payload)
     return response
