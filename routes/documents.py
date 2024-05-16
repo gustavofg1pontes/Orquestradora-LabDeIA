@@ -2,12 +2,14 @@ from flask import request, jsonify
 from flask import Blueprint
 
 from services.DocumentService import DocumentService
+from utils.tokendec import token_required
 
 documents_app = Blueprint('documents_app', __name__)
 documentService = DocumentService()
 
 
 @documents_app.route("/documents/add", methods=['POST'])
+@token_required
 def add_document():
     inserted_id = documentService.insert_one(request)
 
@@ -21,21 +23,25 @@ def add_document():
 
 
 @documents_app.route("/documents/list", methods=['GET'])
+@token_required
 def list_documents():
     return documentService.list()
 
 
 @documents_app.route("/documents/download/<id>", methods=['GET'])
+@token_required
 def get_document(id):
     return documentService.download(id)
 
 
 @documents_app.route("/documents/path/get/<id>", methods=['GET'])
+@token_required
 def get_document_path(id):
     return documentService.get_path(id)
 
 
 @documents_app.route("/documents/get/<id>", methods=['GET'])
+@token_required
 def get_document_info(id):
     return documentService.get(id)
 
