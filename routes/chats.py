@@ -18,7 +18,7 @@ def enviar_mensagem_llm():
     # Get the assistant_id from the X-API-Key header
     api_key_header = request.headers.get('X-API-Key')
 
-    assistant_id = assistantService.findByKey(api_key_header)["_id"]
+    assistant_id = assistantService.findByKey(api_key_header)[0].json["_id"]
     if not assistant_id:
         return jsonify({"message": "Invalid X-API-Key"}), 401
 
